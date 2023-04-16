@@ -1,1 +1,0 @@
-# Validation-of-building-models-against-legislation-using-SHACL
