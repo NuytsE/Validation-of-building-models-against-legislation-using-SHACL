@@ -1,0 +1,106 @@
+@prefix beo: <https://pi.pauwel.be/voc/buildingelement#> .
+@prefix bot: <https://w3id.org/bot#> .
+@prefix ex: <https://example.org/constraint#> .
+@prefix inst:  <http://example.org/instance#>  .
+@prefix props: <https://w3id.org/props#> .
+@prefix schema: <https://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+#complies to ex:DoorProperties
+inst:door_055cceea-293a-4b3d-afc2-3583db815608
+    a                           <https://pi.pauwel.be/voc/buildingelement#Door> ;
+    props:overallHeightIfcDoor  inst:overallHeightIfcDoor_055cceea-293a-4b3d-afc2-3583db815608 .
+
+inst:overallHeightIfcDoor_055cceea-293a-4b3d-afc2-3583db815608 schema:value "2.50"^^xsd:double .
+
+#does not comply to ex:DoorProperties (no props:overallHeightIfcDoor)
+inst:door_26b15939-6ab5-4afb-971c-d683aa1c231c
+    a                           <https://pi.pauwel.be/voc/buildingelement#Door> .
+
+#does not comply to ex:DoorProperties (multiple props:overallHeightIfcDoor)
+inst:door_57ba851c-6c7e-43eb-a968-95c0ea9680b7
+    a                           <https://pi.pauwel.be/voc/buildingelement#Door> ;
+    props:overallHeightIfcDoor  inst:overallHeightIfcDoor_57ba851c-6c7e-43eb-a968-95c0ea9680b7 ;
+    props:overallHeightIfcDoor  inst:height_57ba851c-6c7e-43eb-a968-95c0ea9680b7 .
+
+inst:overallHeightIfcDoor_57ba851c-6c7e-43eb-a968-95c0ea9680b7 schema:value "2.10"^^xsd:double .
+inst:height_57ba851c-6c7e-43eb-a968-95c0ea9680b7 schema:value "2.10"^^xsd:double .
+
+#does not comply to ex:DoorHeightProperty (props:overallHeightIfcDoor has no value)
+inst:door_b402cada-c424-4de6-9db4-11a9297c6bb0
+    a                           <https://pi.pauwel.be/voc/buildingelement#Door> ;
+    props:overallHeightIfcDoor  inst:overallHeightIfcDoor_b402cada-c424-4de6-9db4-11a9297c6bb0 .
+
+#does not comply to ex:DoorHeightProperty (props:overallHeightIfcDoor has multiple values)
+inst:door_4c01da63-52b9-49ab-9b3d-b9163d479c8f
+    a                           <https://pi.pauwel.be/voc/buildingelement#Door> ;
+    props:overallHeightIfcDoor  inst:overallHeightIfcDoor_4c01da63-52b9-49ab-9b3d-b9163d479c8f .
+
+inst:overallHeightIfcDoor_4c01da63-52b9-49ab-9b3d-b9163d479c8f 
+    schema:value "2.90"^^xsd:double ;
+    schema:value "2.80"^^xsd:double .
+
+#complies to ex:DoorHeight
+inst:door_7582c817-71a4-41b4-9a77-deef3f76a029
+    a                           <https://pi.pauwel.be/voc/buildingelement#Door> ;
+    props:overallHeightIfcDoor  inst:overallHeightIfcDoor_7582c817-71a4-41b4-9a77-deef3f76a029 .
+
+inst:overallHeightIfcDoor_7582c817-71a4-41b4-9a77-deef3f76a029 
+    schema:value "2.20"^^xsd:double .
+
+#does not comply to ex:Doorheight
+inst:door_4c01da63-52b9-49ab-9b3d-b9163d479c80
+    a                           <https://pi.pauwel.be/voc/buildingelement#Door> ;
+    props:overallHeightIfcDoor  inst:overallHeightIfcDoor_4c01da63-52b9-49ab-9b3d-b9163d479c80 .
+
+inst:overallHeightIfcDoor_4c01da63-52b9-49ab-9b3d-b9163d479c80 
+    schema:value "2.01"^^xsd:double .
+
+#complies to ex:Stair
+inst:stair_bcd1cf34-5c93-41cc-a7e4-6669a028e264
+    a                          <https://pi.pauwel.be/voc/buildingelement#Stair> ;
+    bot:hasSubElement          inst:railing_bcd1cf34-5c93-41cc-a7e4-6669a028e93f, inst:railing_bcd1cf34-5c93-41cc-a7e4-6669a028e943 . 
+
+inst:railing_bcd1cf34-5c93-41cc-a7e4-6669a028e93f a <https://pi.pauwel.be/voc/buildingelement#Railing> .
+inst:railing_bcd1cf34-5c93-41cc-a7e4-6669a028e943 a <https://pi.pauwel.be/voc/buildingelement#Railing> .
+
+#does not comply to ex:Stair
+inst:stair_77a80bbf-cd08-4d3b-98a5-781cad8e0f4f
+    a                          <https://pi.pauwel.be/voc/buildingelement#Stair> .
+
+#complies to ex:StairSlope
+inst:stairflight_6f010293-ddb7-4fe4-8ffd-c144d8444cb4
+    a                           <https://pi.pauwel.be/voc/buildingelement#StairFlight> ;
+    props:riserHeightIfcStairFlight inst:riserHeightIfcStairFlight_6f010293-ddb7-4fe4-8ffd-c144d8444cb4 ;
+    props:treadLengthIfcStairFlight inst:treadLengthIfcStairFlight_6f010293-ddb7-4fe4-8ffd-c144d8444cb4 .
+
+inst:riserHeightIfcStairFlight_6f010293-ddb7-4fe4-8ffd-c144d8444cb4 schema:value "0.17"^^xsd:double .
+inst:treadLengthIfcStairFlight_6f010293-ddb7-4fe4-8ffd-c144d8444cb4 schema:value "0.24"^^xsd:double .
+
+#does not comply to ex:StairSlope
+inst:stairflight_aa6e13ea-b5bc-4245-93bf-8b2355840d02
+    a                           <https://pi.pauwel.be/voc/buildingelement#StairFlight> ;
+    props:riserHeightIfcStairFlight inst:riserHeightIfcStairFlight_aa6e13ea-b5bc-4245-93bf-8b2355840d02 ;
+    props:treadLengthIfcStairFlight inst:treadLengthIfcStairFlight_aa6e13ea-b5bc-4245-93bf-8b2355840d02 .
+
+inst:riserHeightIfcStairFlight_aa6e13ea-b5bc-4245-93bf-8b2355840d02 schema:value "0.17"^^xsd:double .
+inst:treadLengthIfcStairFlight_aa6e13ea-b5bc-4245-93bf-8b2355840d02 schema:value "0.20"^^xsd:double .
+
+#complies to ex:Slopes
+inst:rampflight_4ec82fcb-9118-4408-a3ae-37969a372f02
+    a                           <https://pi.pauwel.be/voc/buildingelement#RampFlight> ;
+    props:heightIfcRampFlight   inst:heightIfcRampFlight_4ec82fcb-9118-4408-a3ae-37969a372f02 ;
+    props:lengthIfcRampFlight   inst:lengthIfcRampFlight_4ec82fcb-9118-4408-a3ae-37969a372f02 .
+
+inst:heightIfcRampFlight_4ec82fcb-9118-4408-a3ae-37969a372f02 schema:value "0.09"^^xsd:double .
+inst:lengthIfcRampFlight_4ec82fcb-9118-4408-a3ae-37969a372f02 schema:value "1.00"^^xsd:double .
+
+#does not comply to ex:Slopes
+inst:rampflight_6b61ce71-1a7a-473c-8f87-4262e0bdb2de
+    a                           <https://pi.pauwel.be/voc/buildingelement#RampFlight> ;
+    props:heightIfcRampFlight   inst:heightIfcRampFlight_6b61ce71-1a7a-473c-8f87-4262e0bdb2de ;
+    props:lengthIfcRampFlight   inst:lengthIfcRampFlight_6b61ce71-1a7a-473c-8f87-4262e0bdb2de .
+
+inst:heightIfcRampFlight_6b61ce71-1a7a-473c-8f87-4262e0bdb2de schema:value "0.11"^^xsd:double .
+inst:lengthIfcRampFlight_6b61ce71-1a7a-473c-8f87-4262e0bdb2de schema:value "1.50"^^xsd:double .

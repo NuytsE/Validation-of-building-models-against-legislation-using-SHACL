@@ -1,0 +1,140 @@
+@prefix beo: <https://pi.pauwel.be/voc/buildingelement#> .
+@prefix bot: <https://w3id.org/bot#> .
+@prefix ex: <https://example.org#> .
+@prefix props: <https://w3id.org/props#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:DoorProperties
+  a  sh:NodeShape ;  #apply the shape to a focus node
+  sh:targetClass  beo:Door ;  #target all nodes with class `Door'
+  sh:property [  #target a property of each `Door'
+    sh:path  props:overallHeightIfcDoor ;  #target the height predicate
+    sh:property ex:DoorHeightProperty ;
+    sh:minCount  1 ;  #each `Door' should have at least one height property
+    sh:maxCount  1 ;  #each `Door' should have at most one height property
+    sh:message  "Each door should have exactly one overallHeightIfcDoor" ; ] .
+
+ex:DoorHeightProperty
+  a  sh:PropertyShape ;
+  sh:path  schema:value ;
+  sh:minCount  1 ;  
+  sh:maxCount  1 ;
+  sh:message  "Each doorheight should have exactly one value" .
+
+ex:Door
+  a  sh:NodeShape ;  #apply the shape to a focus node
+  sh:targetClass  beo:Door ;  #target all nodes with class 'Door'
+  sh:property [  #target a property of each 'Door'
+    sh:path  props:overallHeightIfcDoor ;  #target the height predicate
+    sh:property  ex:DoorHeight ; ] .  #name the object of this predicate path
+
+ex:DoorHeight  #the named object is now a subject
+  a  sh:PropertyShape ;  #target a property of the focus node
+  sh:path  schema:value ;  #target the value predicate
+  sh:minInclusive  "2.09"^^xsd:double ;  #the object should be more than 2.09 m
+  sh:message  "Art.22 §1: For entrances or doorways, a clear passage height of at least 2.09 meters must be guaranteed after finishing" .
+
+ex:Stair
+  a  sh:NodeShape ;  #apply the shape to a focus node
+  sh:targetClass  beo:Stair ;  #target all nodes with class 'Stair'
+  sh:property [  #target a property of each 'Stair'
+    sh:path  bot:hasSubElement ;  #target the subelement predicate
+    sh:qualifiedValueShape  [sh:class  beo:Railing] ;  #target the class 'Railing'
+    sh:qualifiedMinCount  2 ;  #two elements of this class should be present
+    sh:message  "Art.20 §4: A railing should be fitted on both sides of the stair" ; ] .
+
+ex:LessThan
+  a sh:SPARQLFunction ;
+  rdfs:comment "Returns True if op1 < op2." ;
+  sh:parameter [
+    sh:path ex:op1 ;
+    sh:datatype xsd:double ;
+    sh:description "The first int" ;
+  ] ;
+  sh:parameter [
+    sh:path ex:op2 ;
+    sh:datatype xsd:double ;
+    sh:description "The second int" ;
+  ] ;
+  sh:returnType xsd:boolean ;
+  sh:select """
+    SELECT ?result
+    WHERE {
+      BIND(IF(?op1 < ?op2, true, false) AS ?result) .
+    }
+    """ .
+
+ex:StairFormula
+  a sh:SPARQLFunction ;
+  rdfs:comment "stair formula" ;
+  sh:parameter [
+    sh:path ex:op1 ;
+    sh:datatype xsd:double ;
+    sh:description "riserHeight" ;
+  ] ;
+  sh:parameter [
+    sh:path ex:op2 ;
+    sh:datatype xsd:double ;
+    sh:description "treadLength" ;
+  ] ;
+  sh:returnType xsd:double ;
+  sh:select """
+    SELECT ( (2 * $op1 + $op2) AS ?result)
+    WHERE {
+    }
+    """ .
+
+ex:StairSlope
+  a  sh:NodeShape ;  #apply the shape to a focus node
+  sh:targetClass  beo:StairFlight ;  #target all nodes with class 'StairFlight'
+  sh:message  "Art.20 §3: the sum of twice the riser and once the tread of each step must be higher than 0.57 m." ;
+  sh:expression [  
+    ex:LessThan (  #refer to the LessThan(a,b) function
+        0.57  #first parameter of LessThan
+        [  #second parameter of LessThan
+            ex:StairFormula ( #refer to the StairFormula(riser, tread) function
+                [sh:path  (props:riserHeightIfcStairFlight  schema:value)]
+                [sh:path  (props:treadLengthIfcStairFlight  schema:value)])])] .
+
+ex:Slope
+  a sh:SPARQLFunction ;
+  rdfs:comment "slope of a rampflight" ;
+  sh:parameter [
+    sh:path ex:op1 ;
+    sh:datatype xsd:double ;
+    sh:description "height rampflight" ;
+  ] ;
+  sh:parameter [
+    sh:path ex:op2 ;
+    sh:datatype xsd:double ;
+    sh:description "length rampflight" ;
+  ] ;
+  sh:returnType xsd:double ;
+  sh:select """
+    SELECT ( ( ($op1 / $op2) * 100) AS ?result)
+    WHERE {
+    }
+    """ .
+
+ex:Slopes
+  a  sh:NodeShape ;  #apply the shape to a focus node
+  sh:targetClass  beo:RampFlight ;  #target all nodes with class 'Rampflight'
+  sh:message  "Art.19 §1: The slope of a rampflight is maximally ten percent for level differences of up to 0.10 m" ;
+  sh:and (  #both constraints should be fulfilled
+    [sh:expression [  #first constraint: the slope is less than 10%
+        ex:LessThan (
+            [ex:Slope (
+                [sh:path  (props:heightIfcRampFlight  schema:value)]
+                [sh:path  (props:lengthIfcRampFlight  schema:value)])]
+            10)]]
+    sh:node  ex:SlopeConstraint) . #if the slope is less than 10%, check the next constraint 
+
+ex:SlopeConstraint
+  a sh:NodeShape ;
+  sh:property [
+    sh:path (props:heightIfcRampFlight schema:value) ;
+    sh:maxInclusive "0.10"^^xsd:double ;
+  ] .
