@@ -1,0 +1,1 @@
+The data in this repository is related to a publication in the Proceedings of the 11th Linked Data in Architecture and Construction Workshop (LDAC2023), which can be consulted at http://hdl.handle.net/1854/LU-01HCHF9JK71QP7RQCEZCQK49WC.
